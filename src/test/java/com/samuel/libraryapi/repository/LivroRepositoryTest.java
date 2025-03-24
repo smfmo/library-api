@@ -185,4 +185,13 @@ class LivroRepositoryTest {
                 "preco");
         resultado.forEach(System.out::println);
     }
+
+    @Test
+    public void deletePorGenero(){
+        livroRepository.deleteByGenero(GeneroLivro.CIENCIA);
+    }
+    @Test
+    public void atualizarDataPublicacao(){
+        livroRepository.updateDataPublicacao(LocalDate.of(2000 ,1, 1));
+    }
 }
