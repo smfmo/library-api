@@ -145,9 +145,44 @@ class LivroRepositoryTest {
     }
     @Test
     public void pesquisarPorTituloOrPrecoTest(){
-        List<Livro> pesquisarLivro = livroRepository.findByTituloOrIsbn("Estoicismo", "9976-0099");
+        List<Livro> pesquisarLivro = livroRepository.findByTituloOrIsbnOrderByTitulo("Estoicismo", "9976-0099");
         pesquisarLivro.forEach(System.out::println);
-
     }
 
+    @Test
+    public void listarLivrosComQueryJPQL(){
+        var resultado = livroRepository.listarTodosOrdenadoPorTituloAndPreco();
+        resultado.forEach(System.out::println);
+    }
+    @Test
+    public void listarAutoresDosLivrosComQueryJPQL(){
+        var resultado = livroRepository.listarAutoresDosLivros();
+        resultado.forEach(System.out::println);
+    }
+
+    @Test
+    public void listarTitulosNaoRepetidos(){
+        var resultado = livroRepository.listarNomesLivros();
+        resultado.forEach(System.out::println);
+    }
+    @Test
+    public void listarGenerosDeLivrosAutoresBrasileiros(){
+        var resultado = livroRepository.listarGenerosAutoresBrasileiros();
+        resultado.forEach(System.out::println);
+    }
+
+    @Test
+    public void listarPorGeneroQueryParam(){
+        var resultado = livroRepository.findByGenero(
+                GeneroLivro.CIENCIA,
+                "dataPublicacao");
+        resultado.forEach(System.out::println);
+    }
+    @Test
+    public void listarPorGeneroPositionalParam(){
+        var resultado = livroRepository.findByGeneroPositionalParameters(
+                GeneroLivro.CIENCIA,
+                "preco");
+        resultado.forEach(System.out::println);
+    }
 }
