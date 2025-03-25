@@ -45,23 +45,30 @@ class LivroRepositoryTest {
 
     @Test
     public void salvarAutorELivroTest(){
-        Livro livro = new Livro();
-        livro.setIsbn("54345-9777");
-        livro.setPreco(BigDecimal.valueOf(100));
-        livro.setGenero(GeneroLivro.FICCAO);
-        livro.setTitulo("50 tons de cinza");
-        livro.setDataPublicacao(LocalDate.of(2015, 12,12));
-
+        //salva o autor
         Autor autor = new Autor();
-        autor.setNome("Roberto");
+        autor.setNome("Francisca");
         autor.setNacionalidade("Americano");
         autor.setDataNascimento(LocalDate.of(1990, 10, 12));
 
         autorRepository.save(autor);
 
+        //salva o livro
+        Livro livro = new Livro();
+        livro.setIsbn("54345-9777");
+        livro.setPreco(BigDecimal.valueOf(100));
+        livro.setGenero(GeneroLivro.FICCAO);
+        livro.setTitulo("livro da Francisca");
+        livro.setDataPublicacao(LocalDate.of(2015, 12,12));
+
+
         livro.setAutor(autor);
 
         livroRepository.save(livro);
+
+        if (autor.getNome().equals("Jose")) {
+            throw new RuntimeException("rollback");
+        }
     }
 
     @Test
