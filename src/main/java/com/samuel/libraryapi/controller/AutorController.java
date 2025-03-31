@@ -29,7 +29,7 @@ public class AutorController {
         var autorEntidade = autor.mapearParaAutor();
         service.salvar(autorEntidade);
 
-        //http://localhost:8080/autores/2121212-dsds-23ds2-ds
+        //http://localhost:8080/autores/2121212-dsds-23ds2-ds (valor do id)
         URI location = ServletUriComponentsBuilder
                 .fromCurrentRequest().path("/{id}")
                 .buildAndExpand(autorEntidade.getId())
