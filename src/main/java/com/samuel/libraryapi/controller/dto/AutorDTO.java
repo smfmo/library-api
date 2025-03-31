@@ -2,8 +2,10 @@ package com.samuel.libraryapi.controller.dto;
 import com.samuel.libraryapi.model.Autor;
 
 import java.time.LocalDate;
+import java.util.UUID;
 
-public record AutorDTO(String nome,
+public record AutorDTO(UUID id,
+                       String nome,
                        LocalDate dataNascimento,
                        String nacionalidade) {
 
