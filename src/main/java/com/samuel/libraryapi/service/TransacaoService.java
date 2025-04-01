@@ -5,7 +5,7 @@ import com.samuel.libraryapi.model.GeneroLivro;
 import com.samuel.libraryapi.model.Livro;
 import com.samuel.libraryapi.repository.AutorRepository;
 import com.samuel.libraryapi.repository.LivroRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -14,17 +14,11 @@ import java.time.LocalDate;
 import java.util.UUID;
 
 @Service
+@RequiredArgsConstructor
 public class TransacaoService {
 
     private final AutorRepository autorRepository;
     private final LivroRepository livroRepository;
-
-    @Autowired
-    public TransacaoService(AutorRepository autorRepository,
-                            LivroRepository livroRepository) {
-        this.autorRepository = autorRepository;
-        this.livroRepository = livroRepository;
-    }
 
     @Transactional
     public void salvarLivroComFoto(){

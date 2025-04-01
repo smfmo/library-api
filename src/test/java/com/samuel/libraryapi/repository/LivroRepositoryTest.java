@@ -35,7 +35,7 @@ class LivroRepositoryTest {
         livro.setTitulo("Programação OO 2.0");
         livro.setDataPublicacao(LocalDate.of(2005, 7,18));
 
-        Autor autor = autorRepository.findById(UUID.fromString("5fb6dd41-ce12-48d6-b6e4-637d7cae65ce"))
+        Autor autor = autorRepository.findById(UUID.fromString("348dbb44-73ee-4dc4-90a3-7ddd41b02762"))
                         .orElse(null);
 
         livro.setAutor(autor);
