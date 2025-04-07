@@ -18,7 +18,7 @@ import java.util.UUID;
 @Getter //gera getters automáticos (lombok)
 @Setter //gera setters automáticos (lombok)
 @ToString(exclude = "livro")
-@EntityListeners(AuditingEntityListener.class) //
+@EntityListeners(AuditingEntityListener.class)
 public class Autor {
     //atributos
     @Id

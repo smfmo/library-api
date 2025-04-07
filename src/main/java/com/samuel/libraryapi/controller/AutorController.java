@@ -2,6 +2,7 @@ package com.samuel.libraryapi.controller;
 
 import com.samuel.libraryapi.controller.dto.AutorDto;
 import com.samuel.libraryapi.controller.dto.ErroRespostaDto;
+import com.samuel.libraryapi.controller.mappers.AutorMapper;
 import com.samuel.libraryapi.exceptions.OperacaoNaoPermitidaException;
 import com.samuel.libraryapi.exceptions.RegistroDuplicadoException;
 import com.samuel.libraryapi.model.Autor;
@@ -24,17 +25,18 @@ import java.util.stream.Collectors;
 public class AutorController {
 
     private final AutorService service;
+    private final AutorMapper mapper;
 
     @PostMapping
-    public ResponseEntity<Object> salvar(@RequestBody @Valid AutorDto autor) {
+    public ResponseEntity<Object> salvar(@RequestBody @Valid AutorDto dto) {
         try {
-            var autorEntidade = autor.mapearParaAutor();
-            service.salvar(autorEntidade);
+            Autor autor = mapper.toEntity(dto);
+            service.salvar(autor);
 
             //http://localhost:8080/autores/2121212-dsds-23ds2-ds (valor do id)
             URI location = ServletUriComponentsBuilder
                     .fromCurrentRequest().path("/{id}")
-                    .buildAndExpand(autorEntidade.getId())
+                    .buildAndExpand(autor.getId())
                     .toUri();
 
             return ResponseEntity.created(location).build();
@@ -48,18 +50,13 @@ public class AutorController {
     @GetMapping("/{id}") //algoritmo pra obter os dados pelo id do autor
     public ResponseEntity<AutorDto> obterDetalhes(@PathVariable("id") String id) {
         var idAutor = UUID.fromString(id);
-        Optional<Autor> autorOptional = service.obterPorId(idAutor);
-        if(autorOptional.isPresent()) {
-            Autor autor = autorOptional.get();
-            AutorDto dto = new AutorDto(autor.getId(),
-                    autor.getNome(),
-                    autor.getDataNascimento(),
-                    autor.getNacionalidade());
 
-            return ResponseEntity.ok(dto);
-        }
-
-        return ResponseEntity.notFound().build();
+        return service
+                .obterPorId(idAutor)
+                .map(autor -> {
+                    AutorDto dto = mapper.toDto(autor);
+                    return ResponseEntity.ok(dto);
+                }).orElseGet(()-> ResponseEntity.notFound().build());
     }
 
     @DeleteMapping("/{id}") // algoritmo para excluir autor
@@ -87,20 +84,18 @@ public class AutorController {
                                                                        required = false) String nome,
                                                            @RequestParam(value = "nacionalidade",
                                                                         required = false) String nacionalidade) {
-        List<Autor> resultado = service.pesquisarPeloNomeENacionalidade(nome, nacionalidade);
+        List<Autor> resultado = service.pesquisaByExample(nome, nacionalidade);
         List<AutorDto> lista = resultado
                 .stream()
-                .map(autor -> new AutorDto(autor.getId(),
-                autor.getNome(),
-                autor.getDataNascimento(),
-                autor.getNacionalidade())).collect(Collectors.toList());
+                .map(mapper::toDto)
+                .collect(Collectors.toList());
 
         return ResponseEntity.ok(lista);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Object> atualziar(@PathVariable(name = "id") String id,
-                                          @RequestBody AutorDto dto) {
+    public ResponseEntity<Object> atualizar(@PathVariable(name = "id") String id,
+                                            @RequestBody @Valid AutorDto dto) {
         try {
             var idAutor = UUID.fromString(id);
             Optional<Autor> autorOptional = service.obterPorId(idAutor);

@@ -10,7 +10,7 @@ id_usuario UUID
 
 CREATE TABLE livro(
 id UUID not null primary key,
-isbn VARCHAR(20) not null,
+isbn VARCHAR(20) not null unique,
 titulo VARCHAR(150) not null,
 data_publicacao DATE not null,
 genero VARCHAR(30) not null,
