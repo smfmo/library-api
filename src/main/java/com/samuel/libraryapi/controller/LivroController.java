@@ -1,8 +1,8 @@
 package com.samuel.libraryapi.controller;
 
 import com.samuel.libraryapi.controller.dto.CadastroLivroDto;
-import com.samuel.libraryapi.controller.dto.ErroRespostaDto;
-import com.samuel.libraryapi.exceptions.RegistroDuplicadoException;
+import com.samuel.libraryapi.controller.mappers.LivroMapper;
+import com.samuel.libraryapi.model.Livro;
 import com.samuel.libraryapi.service.LivroService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -15,22 +15,19 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/livros")
 @RequiredArgsConstructor
-public class LivroController {
+public class LivroController implements GenericController {
 
     private final LivroService service;
+    private final LivroMapper mapper;
 
     @PostMapping
-    public ResponseEntity<Object> salvar(@RequestBody @Valid CadastroLivroDto dto) {
-        try{
-            //mapear dto para a entidade
-            //enviar a entidade para o service validar e salvar no banco
-            //criar url para acesso dos dados do livro
-            //retornar codigo created com header location
+    public ResponseEntity<Void> salvar(@RequestBody @Valid CadastroLivroDto dto) {
+        Livro livro = mapper.toEntity(dto);
+        service.salvar(livro);
 
-            return ResponseEntity.ok(dto);
-        }catch (RegistroDuplicadoException e){
-            var erroDto = ErroRespostaDto.conflito(e.getMessage());
-            return ResponseEntity.status(erroDto.status()).body(erroDto);
-        }
+        var url = gerarHeaderLocation(livro.getId());
+
+        return ResponseEntity.created(url).build();
+
     }
 }
