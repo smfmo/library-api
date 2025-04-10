@@ -1,16 +1,16 @@
 package com.samuel.libraryapi.controller;
 
 import com.samuel.libraryapi.controller.dto.CadastroLivroDto;
+import com.samuel.libraryapi.controller.dto.ResultadoPesquisaLivroDto;
 import com.samuel.libraryapi.controller.mappers.LivroMapper;
 import com.samuel.libraryapi.model.Livro;
 import com.samuel.libraryapi.service.LivroService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/livros")
@@ -28,6 +28,15 @@ public class LivroController implements GenericController {
         var url = gerarHeaderLocation(livro.getId());
 
         return ResponseEntity.created(url).build();
+    }
 
+    @GetMapping("/{id}")
+    public ResponseEntity<ResultadoPesquisaLivroDto> obterDetalhes(
+            @PathVariable("id") String id){
+        return service.obterPorId(UUID.fromString(id))
+                .map(livro -> {
+                    var dto = mapper.toDto(livro);
+                    return ResponseEntity.ok(dto);
+                }).orElseGet(() -> ResponseEntity.notFound().build());
     }
 }
