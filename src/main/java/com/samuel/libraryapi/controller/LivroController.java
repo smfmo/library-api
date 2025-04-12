@@ -3,6 +3,7 @@ package com.samuel.libraryapi.controller;
 import com.samuel.libraryapi.controller.dto.CadastroLivroDto;
 import com.samuel.libraryapi.controller.dto.ResultadoPesquisaLivroDto;
 import com.samuel.libraryapi.controller.mappers.LivroMapper;
+import com.samuel.libraryapi.model.GeneroLivro;
 import com.samuel.libraryapi.model.Livro;
 import com.samuel.libraryapi.service.LivroService;
 import jakarta.validation.Valid;
@@ -10,7 +11,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/livros")
@@ -50,7 +53,18 @@ public class LivroController implements GenericController {
     }
 
     @GetMapping
-    public ResponseEntity<Object> PesquisarLivroCompleto(){
-        return null;
+    public ResponseEntity<List<ResultadoPesquisaLivroDto>> pesquisa(
+            @RequestParam(value = "isbn", required = false) String isbn,
+            @RequestParam(value = "titulo", required = false) String titulo,
+            @RequestParam(value = "nome-autor", required = false) String nomeAutor,
+            @RequestParam(value = "genero", required = false) GeneroLivro genero,
+            @RequestParam(value = "ano-publicacao", required = false) Integer anoPublicacao){
+
+        var resultado = service.pesquisa(isbn, titulo, nomeAutor, genero, anoPublicacao);
+        var lista = resultado
+                .stream()
+                .map(mapper::toDto).collect(Collectors.toList());
+
+        return ResponseEntity.ok(lista);
     }
 }

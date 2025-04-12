@@ -6,10 +6,10 @@ import com.samuel.libraryapi.repository.LivroRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
-
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+import static com.samuel.libraryapi.repository.specs.LivroSpecs.*;
 
 @Service
 @RequiredArgsConstructor
@@ -31,11 +31,34 @@ public class LivroService {
 
     public List<Livro> pesquisa(
             String isbn,
+            String titulo,
             String nomeAutor,
             GeneroLivro genero,
             Integer AnoPublicacao){
 
-        Specification<Livro> specification = null;
-        return livroRepository.findAll(specification);
+        //select * from livro where isbn = :isbn and nomeAutor =
+//        Specification<Livro> specification = Specification
+//                .where(LivroSpecs.isbnEqual(isbn))
+//                .and(LivroSpecs.tituloLike(titulo))
+//                .and(LivroSpecs.generoEqual(genero));
+
+        //select * from livro where 0 = 0
+        Specification<Livro> specs = Specification
+                .where((root,
+                        query,
+                        criteriaBuilder) -> criteriaBuilder.conjunction());
+
+        if (isbn != null){
+            // query = query and isbn = :isbn
+            specs = specs.and(isbnEqual(isbn));
+        }
+        if (titulo != null){
+            specs = specs.and(tituloLike(titulo));
+        }
+        if (genero != null){
+            specs = specs.and(generoEqual(genero));
+        }
+
+        return livroRepository.findAll(isbnEqual(isbn));
     }
 }
