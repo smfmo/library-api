@@ -25,6 +25,20 @@ public class LivroSpecs {
                 criteriaBuilder) -> criteriaBuilder.equal(root.get("genero"), genero);
     }
 
+    public static Specification<Livro> nomeEqual(String nome) {
+        return null;
+    }
 
+
+    public static Specification<Livro> anoPublicacaoEqual(Integer anoPublicacao) {
+        //and to_char(data_publicacao, 'YYYY') :anoPublicacao
+        return (root,
+                query,
+                criteriaBuilder) ->
+                criteriaBuilder.equal(
+                        criteriaBuilder.function("to_char", String.class,
+                                root.get("dataPublicacao"),
+                                criteriaBuilder.literal("YYYY")) , anoPublicacao.toString());
+    }
 
 }
