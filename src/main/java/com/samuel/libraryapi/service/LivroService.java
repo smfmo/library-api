@@ -3,6 +3,7 @@ package com.samuel.libraryapi.service;
 import com.samuel.libraryapi.model.GeneroLivro;
 import com.samuel.libraryapi.model.Livro;
 import com.samuel.libraryapi.repository.LivroRepository;
+import com.samuel.libraryapi.validator.LivroValidator;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
@@ -16,8 +17,10 @@ import static com.samuel.libraryapi.repository.specs.LivroSpecs.*;
 public class LivroService {
 
     private final LivroRepository livroRepository;
+    private final LivroValidator livroValidator;
 
     public Livro salvar(Livro livro) {
+        livroValidator.validar(livro);
         return livroRepository.save(livro);
     }
 
@@ -73,6 +76,7 @@ public class LivroService {
             throw new IllegalArgumentException("Para atualizar, é necessário que o livro esteja salvo na base");
         }
 
+        livroValidator.validar(livro);
         livroRepository.save(livro);
     }
 
