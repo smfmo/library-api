@@ -2,6 +2,7 @@ package com.samuel.libraryapi.controller.common;
 
 import com.samuel.libraryapi.controller.dto.ErroCampoDto;
 import com.samuel.libraryapi.controller.dto.ErroRespostaDto;
+import com.samuel.libraryapi.exceptions.CampoInvalidoException;
 import com.samuel.libraryapi.exceptions.OperacaoNaoPermitidaException;
 import com.samuel.libraryapi.exceptions.RegistroDuplicadoException;
 import org.springframework.http.HttpStatus;
@@ -42,6 +43,13 @@ public class GlobalExceptionHandler {
         return ErroRespostaDto.respostaPadrao(e.getMessage());
     }
 
+    @ExceptionHandler(CampoInvalidoException.class)
+    @ResponseStatus(HttpStatus.UNPROCESSABLE_ENTITY)
+    public ErroRespostaDto handleCampoInvalido(CampoInvalidoException e){
+        return new ErroRespostaDto(HttpStatus.UNPROCESSABLE_ENTITY.value(),
+                "Erro de validação",
+                List.of(new ErroCampoDto(e.getCampo(), e.getMessage())));
+    }
 
     @ExceptionHandler(RuntimeException.class)
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
