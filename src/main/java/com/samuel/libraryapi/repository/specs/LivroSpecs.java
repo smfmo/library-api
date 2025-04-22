@@ -2,6 +2,8 @@ package com.samuel.libraryapi.repository.specs;
 
 import com.samuel.libraryapi.model.GeneroLivro;
 import com.samuel.libraryapi.model.Livro;
+import jakarta.persistence.criteria.Join;
+import jakarta.persistence.criteria.JoinType;
 import org.springframework.data.jpa.domain.Specification;
 
 public class LivroSpecs {
@@ -25,10 +27,17 @@ public class LivroSpecs {
                 criteriaBuilder) -> criteriaBuilder.equal(root.get("genero"), genero);
     }
 
-    public static Specification<Livro> nomeEqual(String nome) {
-        return null;
-    }
+    public static Specification<Livro> nomeAutorLike(String nome) {
+        return (root,
+                query,
+                criteriaBuilder) -> {
 
+            Join<Object, Object> autor = root.join("autor", JoinType.LEFT);
+            return criteriaBuilder.like(criteriaBuilder.upper(autor.get("nome")), "%" + nome.toUpperCase() + "%");
+            //return criteriaBuilder.like(criteriaBuilder.upper(root.get("autor").get("nome")), "%" + nome.toUpperCase() + "%");
+
+        };
+    }
 
     public static Specification<Livro> anoPublicacaoEqual(Integer anoPublicacao) {
         //and to_char(data_publicacao, 'YYYY') :anoPublicacao
