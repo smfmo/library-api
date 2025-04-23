@@ -1,5 +1,4 @@
 package com.samuel.libraryapi.controller.dto;
-import com.samuel.libraryapi.model.Autor;
 import jakarta.validation.constraints.Past;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;

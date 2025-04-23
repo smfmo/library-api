@@ -5,6 +5,9 @@ import com.samuel.libraryapi.model.Livro;
 import com.samuel.libraryapi.repository.LivroRepository;
 import com.samuel.libraryapi.validator.LivroValidator;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import java.util.List;
@@ -32,12 +35,14 @@ public class LivroService {
         livroRepository.delete(livro);
     }
 
-    public List<Livro> pesquisa(
+    public Page<Livro> pesquisa(
             String isbn,
             String titulo,
             String nomeAutor,
             GeneroLivro genero,
-            Integer AnoPublicacao){
+            Integer AnoPublicacao,
+            Integer pagina,
+            Integer tamanhoPagina){
 
         //select * from livro where isbn = :isbn and nomeAutor =
 //        Specification<Livro> specification = Specification
@@ -68,7 +73,9 @@ public class LivroService {
             specs = specs.and(nomeAutorLike(nomeAutor));
         }
 
-        return livroRepository.findAll(specs);
+        Pageable pageRequest = PageRequest.of(pagina, tamanhoPagina);
+
+        return livroRepository.findAll(specs, pageRequest);
     }
 
     public void atualizar(Livro livro) {

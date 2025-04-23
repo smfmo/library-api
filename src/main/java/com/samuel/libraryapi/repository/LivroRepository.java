@@ -2,6 +2,8 @@ package com.samuel.libraryapi.repository;
 import com.samuel.libraryapi.model.Autor;
 import com.samuel.libraryapi.model.GeneroLivro;
 import com.samuel.libraryapi.model.Livro;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Modifying;
@@ -19,6 +21,9 @@ import java.util.UUID;
  * @see LivroRepositoryTest
  */
 public interface LivroRepository extends JpaRepository<Livro, UUID>, JpaSpecificationExecutor<Livro> {
+
+    Page<Livro> findByAutor(Autor autor, Pageable pageable);
+
     //QUERY Method
     //select * from livro where id_autor = id
     List <Livro> findByAutor(Autor autor);
