@@ -16,8 +16,10 @@ public class SecurityConfiguration {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         return http
                 .csrf(AbstractHttpConfigurer::disable) //desativa CSRF (importantes em APIs Rest Já que não usam cookies)
-                .formLogin(Customizer.withDefaults()) // Habilita o formulário de login padrão do Spring Security
                 .httpBasic(Customizer.withDefaults()) // habilita autenticação básica via cabeçalho (Authorization)
+                .formLogin(configurer -> {
+                    configurer.loginPage("/login").permitAll();
+                })
                 .authorizeHttpRequests(authorizeRequests -> {
                     authorizeRequests.anyRequest().authenticated(); //todas as requisições precisam estar autenticadas
                 })
