@@ -2,6 +2,7 @@ package com.samuel.libraryapi.configuration;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -23,11 +24,24 @@ public class SecurityConfiguration {
         return security
                 .csrf(AbstractHttpConfigurer::disable) //desativa CSRF (importantes em APIs Rest Já que não usam cookies)
                 .authorizeHttpRequests(authorizeRequests -> {
+                    authorizeRequests.requestMatchers("/login").permitAll();
+                    //autores
+                    authorizeRequests.requestMatchers(HttpMethod.POST,"/autores/**").hasRole("ADMIN"); //somentes ADMIN tem permissão para fazer operações
+                    authorizeRequests.requestMatchers(HttpMethod.PUT, "/autores/**").hasRole("ADMIN");
+                    authorizeRequests.requestMatchers(HttpMethod.DELETE, "/autores/**").hasRole("ADMIN");
+                    authorizeRequests.requestMatchers(HttpMethod.GET, "/autores/**").hasAnyRole("ADMIN","USER");
+                    //livros
+                    authorizeRequests.requestMatchers(HttpMethod.POST,"/livros/**").hasRole("ADMIN");
+                    authorizeRequests.requestMatchers(HttpMethod.DELETE, "/livros/**").hasRole("ADMIN");
+                    authorizeRequests.requestMatchers(HttpMethod.PUT, "/livros/**").hasRole("ADMIN");
+                    authorizeRequests.requestMatchers(HttpMethod.GET, "/livros/**").hasAnyRole("ADMIN", "USER");
+
                     authorizeRequests.anyRequest().authenticated(); //todas as requisições precisam estar autenticadas
+
                 })
                 .httpBasic(Customizer.withDefaults()) // habilita autenticação básica via cabeçalho (Authorization)
                 .formLogin(configurer -> {
-                    configurer.loginPage("/login").permitAll();
+                    configurer.loginPage("/login");
                 })
                 .build();
     }
