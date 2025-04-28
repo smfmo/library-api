@@ -1,3 +1,5 @@
+--tabela de autores--
+
 CREATE TABLE autor(
 id UUID not null primary key,
 nome VARCHAR(100) not null,
@@ -7,6 +9,8 @@ data_cadastro timestamp,
 data_atualizacao timestamp,
 id_usuario UUID
 );
+
+--tabela de livros--
 
 CREATE TABLE livro(
 id UUID not null primary key,
@@ -20,4 +24,13 @@ data_atualizacao timestamp,
 id_usuario UUID,
 id_autor UUID not null references autor(id),
 CONSTRAINT chk_genero CHECK(genero in ('FICCAO', 'FANTASIA', 'MISTERIO', 'ROMANCE', 'BIBLIOGRAFIA', 'CIENCIA'))
+);
+
+--tabela de usuarios e suas respectivas roles--
+
+create table usuario(
+	id uuid not null primary key,
+	login varchar(20) not null unique,
+	senha varchar(300) not null,
+	roles varchar[]
 );

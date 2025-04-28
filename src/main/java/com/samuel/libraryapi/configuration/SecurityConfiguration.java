@@ -1,5 +1,6 @@
 package com.samuel.libraryapi.configuration;
 
+import com.samuel.libraryapi.service.UsuarioService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -14,6 +15,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
+import security.CustomUserDetailsService;
 
 @Configuration
 @EnableWebSecurity
@@ -25,6 +27,7 @@ public class SecurityConfiguration {
                 .csrf(AbstractHttpConfigurer::disable) //desativa CSRF (importantes em APIs Rest Já que não usam cookies)
                 .authorizeHttpRequests(authorizeRequests -> {
                     authorizeRequests.requestMatchers("/login").permitAll();
+                    authorizeRequests.requestMatchers(HttpMethod.POST, "/usuarios").permitAll();
                     //autores
                     authorizeRequests.requestMatchers(HttpMethod.POST,"/autores/**").hasRole("ADMIN"); //somentes ADMIN tem permissão para fazer operações
                     authorizeRequests.requestMatchers(HttpMethod.PUT, "/autores/**").hasRole("ADMIN");
@@ -52,18 +55,19 @@ public class SecurityConfiguration {
     }
 
     @Bean
-    public UserDetailsService userDetailsService(PasswordEncoder encoder) {
-        UserDetails user1 = User.builder().
-                username("userTest")
-                .password(encoder.encode("1234"))
-                .roles("USER")
-                .build();
-        UserDetails user2 = User.builder().
-                username("admin")
-                .password(encoder.encode("4321"))
-                .roles("ADMIN")
-                .build();
-
-        return new InMemoryUserDetailsManager(user1, user2);
+    public UserDetailsService userDetailsService(UsuarioService service) {
+//        UserDetails user1 = User.builder().
+//                username("userTest")
+//                .password(encoder.encode("1234"))
+//                .roles("USER")
+//                .build();
+//        UserDetails user2 = User.builder().
+//                username("admin")
+//                .password(encoder.encode("4321"))
+//                .roles("ADMIN")
+//                .build();
+//
+//        return new InMemoryUserDetailsManager(user1, user2);
+        return new CustomUserDetailsService(service);
     }
 }
