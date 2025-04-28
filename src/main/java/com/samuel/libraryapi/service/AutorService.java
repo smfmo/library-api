@@ -2,6 +2,7 @@ package com.samuel.libraryapi.service;
 
 import com.samuel.libraryapi.exceptions.OperacaoNaoPermitidaException;
 import com.samuel.libraryapi.model.Autor;
+import com.samuel.libraryapi.model.Usuario;
 import com.samuel.libraryapi.repository.AutorRepository;
 import com.samuel.libraryapi.repository.LivroRepository;
 import com.samuel.libraryapi.validator.AutorValidator;
@@ -9,6 +10,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.ExampleMatcher;
 import org.springframework.stereotype.Service;
+import com.samuel.libraryapi.security.SecurityService;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -20,9 +22,12 @@ public class AutorService {
     private final AutorRepository repository;
     private final AutorValidator validator;
     private final LivroRepository livroRepository;
+    private final SecurityService securityService;
 
     public Autor salvar(Autor autor) {
         validator.validar(autor);
+        Usuario usuario = securityService.obterUsuarioLogado();
+        autor.setUsuario(usuario);
         return repository.save(autor);
     }
 

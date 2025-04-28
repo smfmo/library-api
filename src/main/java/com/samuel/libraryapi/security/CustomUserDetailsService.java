@@ -1,4 +1,4 @@
-package security;
+package com.samuel.libraryapi.security;
 
 import com.samuel.libraryapi.model.Usuario;
 import com.samuel.libraryapi.service.UsuarioService;

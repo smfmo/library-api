@@ -5,20 +5,19 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.config.Customizer;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
-import org.springframework.security.core.userdetails.User;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
-import security.CustomUserDetailsService;
+import com.samuel.libraryapi.security.CustomUserDetailsService;
 
 @Configuration
 @EnableWebSecurity
+@EnableMethodSecurity(securedEnabled = true, jsr250Enabled = true)
 public class SecurityConfiguration {
 
     @Bean
@@ -26,18 +25,8 @@ public class SecurityConfiguration {
         return security
                 .csrf(AbstractHttpConfigurer::disable) //desativa CSRF (importantes em APIs Rest Já que não usam cookies)
                 .authorizeHttpRequests(authorizeRequests -> {
-                    authorizeRequests.requestMatchers("/login").permitAll();
+                    authorizeRequests.requestMatchers("/login/**").permitAll();
                     authorizeRequests.requestMatchers(HttpMethod.POST, "/usuarios").permitAll();
-                    //autores
-                    authorizeRequests.requestMatchers(HttpMethod.POST,"/autores/**").hasRole("ADMIN"); //somentes ADMIN tem permissão para fazer operações
-                    authorizeRequests.requestMatchers(HttpMethod.PUT, "/autores/**").hasRole("ADMIN");
-                    authorizeRequests.requestMatchers(HttpMethod.DELETE, "/autores/**").hasRole("ADMIN");
-                    authorizeRequests.requestMatchers(HttpMethod.GET, "/autores/**").hasAnyRole("ADMIN","USER");
-                    //livros
-                    authorizeRequests.requestMatchers(HttpMethod.POST,"/livros/**").hasRole("ADMIN");
-                    authorizeRequests.requestMatchers(HttpMethod.DELETE, "/livros/**").hasRole("ADMIN");
-                    authorizeRequests.requestMatchers(HttpMethod.PUT, "/livros/**").hasRole("ADMIN");
-                    authorizeRequests.requestMatchers(HttpMethod.GET, "/livros/**").hasAnyRole("ADMIN", "USER");
 
                     authorizeRequests.anyRequest().authenticated(); //todas as requisições precisam estar autenticadas
 
