@@ -32,9 +32,11 @@ public class SecurityConfiguration {
 
                 })
                 .httpBasic(Customizer.withDefaults()) // habilita autenticação básica via cabeçalho (Authorization)
-                .formLogin(configurer -> {
-                    configurer.loginPage("/login");
-                })
+//                .formLogin(configurer -> {
+//                    configurer.loginPage("/login");
+//                })
+                .formLogin(Customizer.withDefaults())
+                .oauth2Login(Customizer.withDefaults())
                 .build();
     }
 
@@ -43,7 +45,7 @@ public class SecurityConfiguration {
         return new BCryptPasswordEncoder(10);
     }
 
-    @Bean
+    //@Bean
     public UserDetailsService userDetailsService(UsuarioService service) {
 //        UserDetails user1 = User.builder().
 //                username("userTest")
