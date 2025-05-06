@@ -1,5 +1,6 @@
 package com.samuel.libraryapi.controller;
 
+import com.samuel.libraryapi.security.CustomAuthentication;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -15,6 +16,9 @@ public class LoginController {
     @GetMapping("/")
     @ResponseBody
     public String paginaHome(Authentication authentication) {
+        if (authentication instanceof CustomAuthentication customAuth){
+            System.out.println(customAuth.getUsuario());
+        }
         return "Olá, " + authentication.getName();
     }
 }
