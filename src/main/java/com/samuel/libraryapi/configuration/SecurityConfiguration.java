@@ -1,5 +1,6 @@
 package com.samuel.libraryapi.configuration;
 
+import com.samuel.libraryapi.security.LoginSocialSuccessHandler;
 import com.samuel.libraryapi.service.UsuarioService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -22,9 +23,14 @@ import com.samuel.libraryapi.security.CustomUserDetailsService;
 public class SecurityConfiguration {
 
     @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity security) throws Exception {
+    public SecurityFilterChain securityFilterChain(HttpSecurity security,
+                                                   LoginSocialSuccessHandler successHandler) throws Exception {
         return security
                 .csrf(AbstractHttpConfigurer::disable) //desativa CSRF (importantes em APIs Rest Já que não usam cookies)
+                .httpBasic(Customizer.withDefaults())// habilita autenticação básica via cabeçalho (Authorization)
+                .formLogin(configurer -> {
+                    configurer.loginPage("/login");
+                        })
                 .authorizeHttpRequests(authorizeRequests -> {
                     authorizeRequests.requestMatchers("/login/**").permitAll();
                     authorizeRequests.requestMatchers(HttpMethod.POST, "/usuarios").permitAll();
@@ -32,12 +38,11 @@ public class SecurityConfiguration {
                     authorizeRequests.anyRequest().authenticated(); //todas as requisições precisam estar autenticadas
 
                 })
-                .httpBasic(Customizer.withDefaults()) // habilita autenticação básica via cabeçalho (Authorization)
-//                .formLogin(configurer -> {
-//                    configurer.loginPage("/login");
-//                })
-                .formLogin(Customizer.withDefaults())
-                .oauth2Login(Customizer.withDefaults())
+                .oauth2Login(oauth2 ->{
+                    oauth2
+                            .loginPage("/login")
+                            .successHandler(successHandler);
+                })
                 .build();
     }
 
