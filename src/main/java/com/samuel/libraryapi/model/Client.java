@@ -7,7 +7,8 @@ import java.util.UUID;
 
 @Data
 @Entity
-@Table
+@Table(name = "client",
+        schema = "public")
 public class Client {
 
     @Id

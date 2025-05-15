@@ -10,6 +10,7 @@ import org.springframework.stereotype.Component;
 public class ClientValidator {
 
     private final ClientRepository repository;
+
     public void validar(String clientId){
         if (repository.existsByClientId(clientId)) {
             throw new RegistroDuplicadoException("Já existe um cliente cadastrado com esse clientId");
