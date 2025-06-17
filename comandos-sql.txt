@@ -1,6 +1,6 @@
---tabela de autores--
+-- ARQUIVO DESTINADO A CRIAÇÃO DAS TABELAS DO BANCO DE DADOS --
 
-CREATE TABLE autor(
+CREATE TABLE autor( --tabela de autores--
 id UUID not null primary key,
 nome VARCHAR(100) not null,
 data_nascimeto DATE not null,
@@ -10,9 +10,7 @@ data_atualizacao timestamp,
 id_usuario UUID
 );
 
---tabela de livros--
-
-CREATE TABLE livro(
+CREATE TABLE livro( --tabela de livros--
 id UUID not null primary key,
 isbn VARCHAR(20) not null unique,
 titulo VARCHAR(150) not null,
@@ -26,18 +24,14 @@ id_autor UUID not null references autor(id),
 CONSTRAINT chk_genero CHECK(genero in ('FICCAO', 'FANTASIA', 'MISTERIO', 'ROMANCE', 'BIBLIOGRAFIA', 'CIENCIA'))
 );
 
---tabela de usuarios e suas respectivas roles--
-
-create table usuario(
+create table usuario(--tabela de usuarios e suas respectivas roles--
 	id uuid not null primary key,
 	login varchar(20) not null unique,
 	senha varchar(300) not null,
 	roles varchar[]
 );
 
--- Criando uma tabela para Client--
-
-create table client(
+create table client( -- Criando uma tabela para Client--
 	id uuid not null primary key,
 	client_id varchar(150) not null,
 	client_secret varchar(400) not null,
