@@ -1,5 +1,6 @@
 package com.samuel.libraryapi.configuration;
 
+import com.samuel.libraryapi.security.JwtCustomAuthenticationFilter;
 import com.samuel.libraryapi.security.LoginSocialSuccessHandler;
 import com.samuel.libraryapi.service.UsuarioService;
 import org.springframework.context.annotation.Bean;
@@ -13,6 +14,7 @@ import org.springframework.security.config.annotation.web.configurers.AbstractHt
 import org.springframework.security.config.core.GrantedAuthorityDefaults;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationConverter;
 import org.springframework.security.oauth2.server.resource.authentication.JwtGrantedAuthoritiesConverter;
+import org.springframework.security.oauth2.server.resource.web.authentication.BearerTokenAuthenticationFilter;
 import org.springframework.security.web.SecurityFilterChain;
 
 @Configuration
@@ -22,7 +24,8 @@ public class SecurityConfiguration {
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity security,
-                                                   LoginSocialSuccessHandler successHandler) throws Exception {
+                                                   LoginSocialSuccessHandler successHandler,
+                                                   JwtCustomAuthenticationFilter jwtCustomAuthenticationFilter) throws Exception {
         return security
                 .csrf(AbstractHttpConfigurer::disable) //desativa CSRF (importantes em APIs Rest Já que não usam cookies)
                 .httpBasic(Customizer.withDefaults())// habilita autenticação básica via cabeçalho (Authorization)
@@ -44,6 +47,7 @@ public class SecurityConfiguration {
                 .oauth2ResourceServer(
                         oauth2 -> oauth2.jwt(Customizer.withDefaults())
                 )
+                .addFilterAfter(jwtCustomAuthenticationFilter, BearerTokenAuthenticationFilter.class)
                 .build();
     }
 
