@@ -4,6 +4,10 @@ import com.samuel.libraryapi.controller.dto.ClientDto;
 import com.samuel.libraryapi.controller.mappers.ClientMapper;
 import com.samuel.libraryapi.model.Client;
 import com.samuel.libraryapi.service.ClientService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -16,6 +20,7 @@ import java.util.stream.Collectors;
 @RestController
 @RequestMapping("/clients")
 @RequiredArgsConstructor
+@Tag(name = "clientes")
 public class ClientController {
 
     private final ClientService service;
@@ -24,6 +29,10 @@ public class ClientController {
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     @PreAuthorize("hasRole('GERENTE')")
+    @Operation(summary = "Salvar", description = "cadastrar novo client")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "201", description = "Cadastrado com sucesso!"),
+    })
     public void salvarClient(@RequestBody @Valid ClientDto dto){
         Client client = mapper.toEntity(dto);
         service.salvar(client);
@@ -31,6 +40,10 @@ public class ClientController {
 
     @GetMapping
     @PreAuthorize("hasAnyRole('OPERADOR', 'GERENTE')")
+    @Operation(summary = "Pesquisar", description = "realiza pesquisa de clientes por parâmetros")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Sucesso!")
+    })
     public ResponseEntity<List<ClientDto>> pesquisarClient(@RequestParam(value = "clientId",
                                                                     required = false) String clientId,
                                                            @RequestParam(value = "scope",
