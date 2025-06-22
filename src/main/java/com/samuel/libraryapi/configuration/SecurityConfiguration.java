@@ -29,7 +29,6 @@ public class SecurityConfiguration {
                                                    JwtCustomAuthenticationFilter jwtCustomAuthenticationFilter) throws Exception {
         return security
                 .csrf(AbstractHttpConfigurer::disable) //desativa CSRF (importantes em APIs Rest Já que não usam cookies)
-                .httpBasic(Customizer.withDefaults())// habilita autenticação básica via cabeçalho (Authorization)
                 .formLogin(configurer -> {
                     configurer.loginPage("/login");
                         })
