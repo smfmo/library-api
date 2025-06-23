@@ -42,5 +42,12 @@ logging: #Gera arquivos de 'logs' da aplicação
 # 3. info
 # 4. warn
 # 5. error
+management:
+  server:
+    port: 9090
+  endpoints:
+    web:
+      exposure:
+        include: '*'
 springdoc:
   override-with-generic-response: false #desabilita respostas genéricas da API (Ex: 400, 500)

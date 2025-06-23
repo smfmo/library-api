@@ -59,7 +59,8 @@ public class SecurityConfiguration {
                   "/swagger-resources/**",
                   "/swagger-ui.html",
                   "/swagger-ui/**",
-                  "/webjars/**"
+                  "/webjars/**",
+                "/actuator/**"
         );
     } // utilizado para ignorar urls (excluir do filtro do security)
 
