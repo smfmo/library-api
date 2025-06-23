@@ -5,6 +5,7 @@ import com.samuel.libraryapi.controller.dto.ErroRespostaDto;
 import com.samuel.libraryapi.exceptions.CampoInvalidoException;
 import com.samuel.libraryapi.exceptions.OperacaoNaoPermitidaException;
 import com.samuel.libraryapi.exceptions.RegistroDuplicadoException;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.AccessDeniedException;
@@ -18,11 +19,14 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @RestControllerAdvice
+@Slf4j
 public class GlobalExceptionHandler {
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
     @ResponseStatus(HttpStatus.UNPROCESSABLE_ENTITY)
     public ErroRespostaDto handlerMethodArgumentNotValid(MethodArgumentNotValidException e) {
+        log.error("erro de validação: {}", e.getMessage());
+
         List<FieldError> fieldErrors = e.getFieldErrors();
         List<ErroCampoDto> listaErros = fieldErrors
                 .stream()
@@ -61,6 +65,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(RuntimeException.class)
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     public ErroRespostaDto handleErrosNaoTratados(RuntimeException e){
+        log.error("erro inesperado", e);
         return new ErroRespostaDto(HttpStatus.INTERNAL_SERVER_ERROR.value(),
                 "Erro inesperado, entre em contato com a administração", List.of());
     }

@@ -1,6 +1,9 @@
 spring:
   application:
     name: libraryapi
+  output: #habilita as cores dos logs na CLI (Console)
+    ansi:
+      enabled: always
   datasource:
     username: postgres
     password: postgres
@@ -20,5 +23,24 @@ spring:
           google:
             client-id: ${GOOGLE_CLIENT_ID}
             client-secret: ${GOOGLE_CLIENT_SECRET}
+logging: #Gera arquivos de 'logs' da aplicação
+  file:
+    name: libraryapi.log
+  level:
+    root: warn
+    com:
+      samuel: trace
+    org:
+      springframework:
+        web: debug
+        security: trace
+  pattern:
+    console: '%clr(%d{dd-MM-yyyy HH:mm:ss}){yellow} %clr(%5p) %clr([%t]){faint} %clr(%-40.40logger){cyan} %clr(:){yellow} %m%n'
+#hierarquia de níveis de log
+# 1. trace
+# 2. debug
+# 3. info
+# 4. warn
+# 5. error
 springdoc:
   override-with-generic-response: false #desabilita respostas genéricas da API (Ex: 400, 500)
