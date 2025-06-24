@@ -1,13 +1,17 @@
+#Desenvolvimento
 spring:
   application:
     name: libraryapi
+#  profiles:
+#    active: producao
+# SPRING_PROFILES_ACTIVE=producao
   output: #habilita as cores dos logs na CLI (Console)
     ansi:
       enabled: always
   datasource:
-    username: postgres
-    password: postgres
-    url: jdbc:postgresql://localhost:5433/librarydb
+    username: ${DATASOURCE_USERNAME:postgres}
+    password:  ${DATASOURCE_PASSWORD:postgres}
+    url: ${DATASOURCE_URL:jdbc:postgresql://localhost:5433/librarydb}
     driver-class-name: org.postgresql.Driver
   jpa:
     hibernate:
@@ -51,3 +55,23 @@ management:
         include: '*'
 springdoc:
   override-with-generic-response: false #desabilita respostas genéricas da API (Ex: 400, 500)
+
+#produção
+---
+spring:
+  config:
+    activate:
+      on-profile: producao
+  jpa:
+    show-sql: false
+
+#Homologação
+---
+spring:
+  config:
+    activate:
+      on-profile: homologacao
+  jpa:
+    show-sql: false
+  datasource:
+    url: jdbc:postgresql://localhost:5433/librarydb

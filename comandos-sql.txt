@@ -3,7 +3,7 @@
 CREATE TABLE autor( --tabela de autores--
 id UUID not null primary key,
 nome VARCHAR(100) not null,
-data_nascimeto DATE not null,
+data_nascimento DATE not null,
 nacionalidade VARCHAR(50) not null
 data_cadastro timestamp,
 data_atualizacao timestamp,
@@ -38,3 +38,18 @@ create table client( -- Criando uma tabela para Client--
 	redirect_uri varchar(200) not null,
 	scope varchar(50)
 );
+
+-- ARQUIVOS PARA CONFIGURAR O USUÁRIO E CLIENT NO DATABASE --
+create extension if not exists "uuid-ossp"; -- criar extensão para gerar UUID automaticamente --
+
+-- cadastrar usuário --
+insert into usuario
+(id, login, senha, roles, email)
+values
+(uuid_generate_v4(), 'gerente', '$2a$12$91Iap6nk3tpnZqkhmHkjjeqReceT/q893yJJnuCCylCUUVAqoCqT6', '{GERENTE}', 'gerente@email.com');
+
+-- cadastrar client --
+insert into client
+(id, client_id, client_secret, redirect_uri, scope)
+values
+(uuid_generate_v4(), 'client-producao', '$2a$12$vobTLq/F8cWqK.5A0aua8uZbajgUaU8PPD6NVXzXPfIPI2UBZ7pgq', 'http://localhost:8080/authorized', 'GERENTE');
