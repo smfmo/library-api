@@ -10,3 +10,6 @@ docker run --name librarydb-prod -e POSTGRES_PASSWORD=postgresprod -e POSTGRES_U
 # networks dos containers
 library-network
 
+
+
+
