@@ -1,4 +1,4 @@
-# 📚 Projeto de estudo da Arquitetura do Spring Boot
+# 📚 API de livraria em Spring Boot
 
 <div align="center">
   <img src="https://img.shields.io/badge/Java-21-%23ED8B00?logo=java" alt="Java 21">
